@@ -1,6 +1,5 @@
 package matrixdesigner;
 
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,8 +7,6 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.io.File;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -33,9 +30,10 @@ public class AssetBoard extends JPanel {
         super();
         this.status = status;
         setBorder(BorderFactory.createTitledBorder("Assets"));
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new WrapLayout());
         assets = new Object[MAX_ASSETS][2];
         selectedAssetID = -1;
+        
     }
     
     public void importAssets() {
@@ -44,7 +42,7 @@ public class AssetBoard extends JPanel {
             AssetLoader frame = new AssetLoader(this);
             frame.setVisible(true);
         });
-         
+        
     }
     
     public Object[][] getData() {
@@ -56,15 +54,14 @@ public class AssetBoard extends JPanel {
         removeAll();
         for(int i=0; i<MAX_ASSETS; i++){
             if(assets[i][0] == null || ((String)assets[i][0]).isEmpty()) continue;
-            add(Box.createRigidArea(new Dimension(10,10)));
             String filename = (String)assets[i][0];
             String idStr = ((Integer)assets[i][1]).toString();
             ImageIcon icon = new ImageIcon(filename);
             Image image = icon.getImage();
             if(Math.max(icon.getIconHeight(), icon.getIconWidth()) > 200)
                 image = image.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-            else if(Math.min(icon.getIconHeight(), icon.getIconWidth()) < 20)
-                image = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            else if(Math.min(icon.getIconHeight(), icon.getIconWidth()) < 40)
+                image = image.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             else
                 image = image.getScaledInstance(Math.max(icon.getIconHeight(), icon.getIconWidth()), Math.max(icon.getIconHeight(), icon.getIconWidth()), Image.SCALE_SMOOTH);
             icon = new ImageIcon(image);
@@ -104,7 +101,6 @@ public class AssetBoard extends JPanel {
         private final Object[][] assetsBackup;
         private final JPanel owner;
         private int currentAsset;
-        private int firstIndex, lastIndex;
         
         public AssetLoader(JPanel owner) {
             this.owner = owner;
@@ -120,7 +116,7 @@ public class AssetBoard extends JPanel {
         
         private void initUI() {
     // Frame init
-            setSize(600,400);
+            setSize(700,400);
             setResizable(false);
             setTitle("Asset Loader");
             setLocationRelativeTo(null);
@@ -134,14 +130,14 @@ public class AssetBoard extends JPanel {
     // Cancel Button
             JButton cancelButton = new JButton("Cancel");
             GridBagConstraints cancelButtonGBC = new GridBagConstraints();
-            cancelButtonGBC.insets = new Insets(10,0,0,30);
+            cancelButtonGBC.insets = new Insets(10,5,0,20);
             cancelButtonGBC.anchor = GridBagConstraints.LINE_END;
             cancelButtonGBC.gridx = 4;
             cancelButton.addActionListener((e) -> { this.dispose(); });
     // Save Button
             JButton saveButton = new JButton("Save");
             GridBagConstraints saveButtonGBC = new GridBagConstraints();
-            saveButtonGBC.insets = new Insets(10,25,0,0);
+            saveButtonGBC.insets = new Insets(10,5,0,0);
             saveButtonGBC.anchor = GridBagConstraints.LINE_END;
             saveButtonGBC.gridx = 3;
             saveButton.addActionListener((e)->{ 
@@ -165,7 +161,7 @@ public class AssetBoard extends JPanel {
             JButton importButton = new JButton("Import file..");
             GridBagConstraints importButtonGBC = new GridBagConstraints();
             importButtonGBC.anchor = GridBagConstraints.LINE_START;
-            importButtonGBC.insets = new Insets(10,30,0,0);
+            importButtonGBC.insets = new Insets(10,20,0,0);
             importButton.addActionListener((e)->{
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setAcceptAllFileFilterUsed(false);
@@ -256,10 +252,10 @@ public class AssetBoard extends JPanel {
                 table.repaint();
             });
     // Remove File
-            JButton removeButton = new JButton("Remove Assets");
+            JButton removeButton = new JButton("Remove Asset(s)");
             GridBagConstraints removeButtonGBC = new GridBagConstraints();
             removeButtonGBC.anchor = GridBagConstraints.LINE_START;
-            removeButtonGBC.insets = new Insets(10,5,0,5);
+            removeButtonGBC.insets = new Insets(10,5,0,0);
             removeButtonGBC.gridx = 2;
             removeButton.addActionListener((e)-> {
                 for(int i : table.getSelectedRows())
@@ -291,7 +287,6 @@ public class AssetBoard extends JPanel {
 
             owner.removeAll();
             for(int i=0; i < MAX_ASSETS && assets[i][0] != null; i++){
-                owner.add(Box.createRigidArea(new Dimension(10,10)));
                 
                 String filename = (String)assets[i][0];
                 String idStr = ((Integer)assets[i][1]).toString();
@@ -300,8 +295,8 @@ public class AssetBoard extends JPanel {
                 Image image = icon.getImage();
                 if(Math.max(icon.getIconHeight(), icon.getIconWidth()) > 200)
                     image = image.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-                else if(Math.min(icon.getIconHeight(), icon.getIconWidth()) < 20)
-                    image = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                else if(Math.min(icon.getIconHeight(), icon.getIconWidth()) < 40)
+                    image = image.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
                 else
                     image = image.getScaledInstance(Math.max(icon.getIconHeight(), icon.getIconWidth()), Math.max(icon.getIconHeight(), icon.getIconWidth()), Image.SCALE_SMOOTH);
                 icon = new ImageIcon(image);

@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
 
 public class MatrixDesigner extends JFrame {
     
@@ -32,13 +34,15 @@ public class MatrixDesigner extends JFrame {
     private Board board;
     private AssetBoard assetboard;
     private final String howtoText = "<html>If you have questions, contact with me:<br>Email: bkozkan@hotmail.com<br>Github: www.github.com/ozkaberktug</html>";
-    private final String aboutText = "This program written by ozkaberktug in, 11 June 2019. (v1.00)";
-    
+    private final String aboutText = "This program written by ozkaberktug in, 11 June 2019. (v1.01)";
+    private JButton penButton;
+    private JButton eraseButton;
+   
     public MatrixDesigner() {
         super();
         initUI();
     }
-    
+           
     private void initUI() {
         initMenuBar();
         initElements();
@@ -74,8 +78,8 @@ public class MatrixDesigner extends JFrame {
         
         JToolBar tools = new JToolBar();
         tools.setFloatable(false);
-        JButton penButton = new JButton(new ImageIcon(this.getClass().getResource("pen.png")));
-        JButton eraseButton = new JButton(new ImageIcon(this.getClass().getResource("eraser.png")));
+        penButton = new JButton(new ImageIcon(this.getClass().getResource("pen.png")));
+        eraseButton = new JButton(new ImageIcon(this.getClass().getResource("eraser.png")));
         penButton.setToolTipText("Pen");
         eraseButton.setToolTipText("Erase");
         penButton.addActionListener((e) -> { board.setDrawingMode(Board.PEN); });
@@ -87,6 +91,7 @@ public class MatrixDesigner extends JFrame {
         assetboard = new AssetBoard(status);
         board = new Board(status, assetboard);
         JScrollPane assetboardScrollPane = new JScrollPane(assetboard);
+        assetboardScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         assetboardScrollPane.setBorder(null);
         JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, board, assetboardScrollPane);
         splitpane.setOneTouchExpandable(true);

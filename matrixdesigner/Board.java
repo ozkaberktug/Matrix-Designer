@@ -343,18 +343,17 @@ public class Board extends JPanel {
             }
             
             setTitle("Matrix Size: "+Math.abs(maxRow-minRow+1)+"x"+Math.abs(maxCol-minCol+1));
-            
+            textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
             for(int i=0; i<=Math.abs(maxRow-minRow); i++) {
                 for(int j=0; j<=Math.abs(maxCol-minCol); j++) {
                     Node node = nodes.get((i+minRow)+","+(j+minCol));
                     if(node != null) 
-                        s.append(String.format(" %3d", node.val));
+                        s.append(String.format("%3d ", node.val));
                     else
-                        s.append(String.format(" %3d", 0));
+                        s.append(String.format("%3d ", 0));
                 }
                 s.append('\n');
             }
-            
             textArea.setText(s.toString());
         }
         
